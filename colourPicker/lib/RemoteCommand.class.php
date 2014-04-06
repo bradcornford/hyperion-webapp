@@ -212,13 +212,7 @@ class RemoteCommand
     {
         $this->executeCommand('--list | grep \'"name" : \' | cut -d \'"\' -f4 | tr \'\\n\' \',\'');
 
-        $effects = explode(',', $this->output);
-
-        if (count($effects) > 0) {
-            array_splice($effects, -1);
-        }
-
-        return $effects;
+        return $this->extractData();
     }
 
     /**
@@ -246,13 +240,23 @@ class RemoteCommand
     {
         $this->executeCommand('--list | grep \'"priority" : \' | cut -d \':\' -f2 | tr \'\\n\' \',\'');
 
-        $priorities = explode(',', $this->output);
+        return $this->extractData();
+    }
 
-        if (count($priorities) > 0) {
-            array_splice($priorities, -1);
+    /**
+     * Return the current array of data
+     *
+     * @return array
+     */
+    protected function extractData()
+    {
+        $array = explode(',', $this->output);
+
+        if (count($array) > 0) {
+            array_splice($array, -1);
         }
 
-        return $priorities;
+        return $array;
     }
 
     /**
@@ -383,8 +387,12 @@ class RemoteCommand
      *
      * @return boolean
      */
-    protected function executeCommand($command, $overwriteCommand = false)
+    private function executeCommand($command, $overwriteCommand = false)
     {
+        if (!$this->server) {
+            return false;
+        }
+
         if (!$overwriteCommand) {
             if ($this->address) {
                 $command = sprintf(self::ARGUMENT_ADDRESS, $this->address) . $command;
@@ -405,6 +413,10 @@ class RemoteCommand
             $this->output = shell_exec($command);
         } else {
             $connection = ssh2_connect($this->server, 22);
+
+            if (!$this->username) {
+                return false;
+            }
 
             if ($this->password) {
                 ssh2_auth_password($connection, $this->username, $this->password);

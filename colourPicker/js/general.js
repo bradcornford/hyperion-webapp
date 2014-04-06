@@ -49,6 +49,22 @@ $(document).ready(function() {
         }
     });
 
+    $('#duration-switch').click(function (e) {
+        e.preventDefault();
+
+        if (!$('#duration-holder').is(':visible')) {
+            $(this).text('Disable Duration');
+            $(this).removeClass('blue');
+            $(this).addClass('orange')
+        } else {
+            $(this).text('Enable Duration');
+            $(this).removeClass('orange');
+            $(this).addClass('blue');
+        }
+
+        $('#duration-holder').toggle();
+    });
+
     $('#duration-slider').slider({
         'min': 0,
         'max': 38,

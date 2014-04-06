@@ -240,7 +240,7 @@ jQuery._farbtastic = function (container, callback) {
     if (typeof fb.callback == 'object') {
       // Set background/foreground color
       $(fb.callback).css({
-        backgroundColor: fb.color,
+        backgroundColor: '#' + fb.color,
         color: fb.hsl[2] > 0.5 ? '#000' : '#fff'
       });
 
@@ -335,8 +335,7 @@ jQuery._farbtastic = function (container, callback) {
   // Install mousedown handler (the others are set on the document on-demand)
   $('*', e).mousedown(fb.mousedown);
 
-    // Init color
-
+  // Init color
   fb.setColor('#'+currentColour);
 
   // Set linked elements/callback

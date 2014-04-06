@@ -44,7 +44,6 @@ if (isset($_POST['submit'])) {
             break;
         case 'Turn Off':
             $return = $com->withServer($config['serverAddress'], $config['serverUsername'], $config['serverPassword'])
-                ->withSleep(1)
                 ->callOff();
             if ($return) {
                 $messages[] = array(
@@ -242,7 +241,11 @@ if ($config['overwriteStatus']) {
                         <div id="priority-slider"></div>
                     </div>
 
-                    <div id="duration-holder" class="border thin <?php echo !$currentStatus ? ' hidden' : ''; ?>">
+                    <div <?php echo !$currentStatus ? ' class="hidden"' : ''; ?>>
+                        <button id="duration-switch" class="large button blue"><?php echo !isset($_POST['duration']) || isset($_POST['duration']) && $_POST['duration'] == -1 ? ' Enable Duration' : 'Disable Duration'; ?></button>
+                    </div>
+
+                    <div id="duration-holder" class="border thin <?php echo !$currentStatus || !isset($_POST['duration']) || isset($_POST['duration']) && $_POST['duration'] == -1 ? ' hidden' : ''; ?>">
                         <input type="hidden" id="duration" name="duration" value="<?php echo !empty($_SESSION['duration']) ? $_SESSION['duration'] : -1; ?>" />
                         <div id="duration-slider-display"><strong>Duration:</strong> <span>Infinity</span></div>
                         <div id="duration-slider"></div>
@@ -277,10 +280,10 @@ if ($config['overwriteStatus']) {
                     </div>
 
                     <div <?php echo !$currentStatus ? ' class="hidden"' : ''; ?>>
-                        <button id="effect-switch" class="large button blue"><?php echo !$_POST['effect'] ? ' Effects' : 'Close Effects'; ?></button>
+                        <button id="effect-switch" class="large button blue"><?php echo !isset($_POST['effect']) ? ' Effects' : 'Close Effects'; ?></button>
                     </div>
 
-                    <div id="effect-display" class="<?php echo !$_POST['effect'] ? ' hidden' : ''; ?>">
+                    <div id="effect-display" class="<?php echo !isset($_POST['effect']) ? ' hidden' : ''; ?>">
                         <input type="hidden" name="effect" id="effect" value="" />
                         <?php
 
