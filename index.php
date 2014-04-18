@@ -58,6 +58,7 @@ if (isset($_POST['submit'])) {
                 ->withPriority($_POST['priority'])
                 ->callClear();
             unset($_SESSION['priority'][$_POST['priority']]);
+            $_SESSION['duration'] = -1;
             if ($return) {
                 $messages[] = array(
                     'type' => 'success',
@@ -70,6 +71,7 @@ if (isset($_POST['submit'])) {
                 ->withAddress($config['hyperionAddress'])
                 ->callClearAll();
             $_SESSION['priority'] = array();
+            $_SESSION['duration'] = -1;
             if ($return) {
                 $messages[] = array(
                     'type' => 'success',
@@ -242,7 +244,7 @@ if ($config['overwriteStatus']) {
                     </div>
 
                     <div <?php echo !$currentStatus ? ' class="hidden"' : ''; ?>>
-                        <button id="duration-switch" class="large button blue"><?php echo !isset($_POST['duration']) || isset($_POST['duration']) && $_POST['duration'] == -1 ? ' Enable Duration' : 'Disable Duration'; ?></button>
+                        <button id="duration-switch" class="large button <?php echo !isset($_POST['duration']) || isset($_POST['duration']) && $_POST['duration'] == -1 ? 'blue' : 'orange'; ?>"><?php echo !isset($_POST['duration']) || isset($_POST['duration']) && $_POST['duration'] == -1 ? ' Enable Duration' : 'Disable Duration'; ?></button>
                     </div>
 
                     <div id="duration-holder" class="border thin <?php echo !$currentStatus || !isset($_POST['duration']) || isset($_POST['duration']) && $_POST['duration'] == -1 ? ' hidden' : ''; ?>">
@@ -280,10 +282,10 @@ if ($config['overwriteStatus']) {
                     </div>
 
                     <div <?php echo !$currentStatus ? ' class="hidden"' : ''; ?>>
-                        <button id="effect-switch" class="large button blue"><?php echo !isset($_POST['effect']) ? ' Effects' : 'Close Effects'; ?></button>
+                        <button id="effect-switch" class="large button blue"><?php echo isset($_POST['effect']) && !$_POST['effect'] || !isset($_POST['effect']) ? ' Effects' : 'Close Effects'; ?></button>
                     </div>
 
-                    <div id="effect-display" class="<?php echo !isset($_POST['effect']) ? ' hidden' : ''; ?>">
+                    <div id="effect-display" class="<?php echo isset($_POST['effect']) && !$_POST['effect'] || !isset($_POST['effect']) ? ' hidden' : ''; ?>">
                         <input type="hidden" name="effect" id="effect" value="" />
                         <?php
 
