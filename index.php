@@ -32,13 +32,16 @@ $com = new RemoteCommand();
 if (isset($_POST['submit'])) {
     switch ($_POST['submit']) {
         case 'Turn On':
+        case 'Turn Off':
+            $action = explode(' ', $_POST['submit']);
+            $action = end($action);
             $return = $com->withServer($config['serverAddress'], $config['serverUsername'], $config['serverPassword'])
                 ->withSleep(2)
-                ->callOn();
+                ->{'call' . $action}();
             if ($return) {
                 $messages[] = array(
                     'type' => 'success',
-                    'content' => 'Turned on Hyperion successfully.'
+                    'content' => 'Turned ' . strtolower($action) . ' Hyperion successfully.'
                 );
             }
             break;
